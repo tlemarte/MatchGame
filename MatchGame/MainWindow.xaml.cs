@@ -29,6 +29,7 @@ namespace MatchGame
 
         private void SetUpGame()
         {
+            // List of animal emojis
             List<string> animalEmoji = new List<string>()
             {
                 "🐕","🐕",
@@ -43,12 +44,36 @@ namespace MatchGame
 
             Random random = new Random();
 
+            // Go through each text block and replace it with a animal from the list.
             foreach (TextBlock textBlock in mainGrid.Children.OfType<TextBlock>())
             {
                 int index = random.Next(animalEmoji.Count);
                 textBlock.Text = animalEmoji[index];
                 animalEmoji.RemoveAt(index);
             }
+        }
+
+        TextBlock lastTextBlockClicked;
+        bool findingMatch = false;
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock textBlock = sender as TextBlock;
+            if (findingMatch == false)
+            {
+                textBlock.Visibility = Visibility.Hidden;
+                lastTextBlockClicked = textBlock;
+                findingMatch = true;
+            } else if (textBlock.Text == lastTextBlockClicked.Text)
+            {
+                textBlock.Visibility = Visibility.Hidden;
+                findingMatch = false;
+            } else
+            {
+                lastTextBlockClicked.Visibility = Visibility.Visible;
+                findingMatch = false;
+            }
+            
         }
     }
 }
